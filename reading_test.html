@@ -104,6 +104,7 @@
 <script>
 	var articleNo = 1;
 	$(document).ready(function () {
+		console.log("1233123");
 		$("#article1").css("height", window.screen.availHeight * 0.78);
 		$("#article2").css("height", window.screen.availHeight * 0.78);
 		$("#article3").css("height", window.screen.availHeight * 0.78);
@@ -153,10 +154,10 @@
 			var time = $('#time').text();
 			var result = answerMatch(Number(getUrlParam("beginArticle")));
 			console.log(result);
-			if (result == false) {
+			if (result['correct'] == false) {
 				window.alert('Please answer all questions!');
 			} else {
-				window.location.href = "result.html?result=" + result + "&time=" + time;
+				window.location.href = "result.html?result=" + result['correct'] + "&time=" + time+ "&answerSet=" + result['answerSet'];
 			}
 			l.ladda('stop');
 			// Timeout example
@@ -180,6 +181,8 @@
 	function answerMatch(type) {
 		var correct = 0;
 		var json;
+		var answerSet = "";
+		var index = 0;
 		$.ajax({
 			type: "GET",
 			url: "answer/answer.json",
@@ -190,16 +193,23 @@
 		});
 		for (var i = type; i < type + 3; i++) {
 			for (var j = 1; j < 6; j++) {
+				index += 1;
 				var answer = $("input[name='a" + i + "q" + j + "']:checked").val();
 				console.log(answer,"a" + i + "q" + j);
 				if (answer == null || answer == undefined) {
 					return false;
 				} else if (String(answer) == String(json["a" + i + "q" + j + ""])) {
 					correct += 1;
+					answerSet += "1";
+				}else{
+					answerSet += '0';
 				}
 			}
 		}
-		return correct;
+		var result = {};
+		result['correct'] = correct;
+		result['answerSet'] = answerSet;
+		return result;
 	}
 
 	function getUrlParam(name) {

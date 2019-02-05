@@ -48,9 +48,9 @@
                 </div>
             </div>
             <div style="text-align: center">
-				<hr />
                 <h4 id="time" class="m-t-0 header-title"></h4>
                 <h4 id="score" class="m-t-0 header-title"></h4>
+                <h4 id="result" class="m-t-0 header-title"></h4>
             </div>
             <div style="width: 60%;margin-left: 20%;">
                 <div class="portlet">
@@ -171,10 +171,24 @@
         var pielabels = ["CORRECT", "WRONG"];
         var datas = [result, 15 - result];
         var colors = ["green", "red"];
+        var answerSet = getUrlParam('answerSet');
         pieChart("#pie-chart #pie-chart-container", pielabels, datas, colors);
 
         $("#time").text("TIME USED: " + time + " S");
         $("#score").text("ACCURACY: "+result+"/15");
+        var answerList = "";
+        // var table = "<div class=\"p-20\"><table class=\"table m-0\"><thead><tr><th>Question</th><th>Result</th></tr></thead><tbody>";
+        for(var i = 0;i<answerSet.length;i++){
+            if(answerSet[i] == '1'){
+                //table += "<tr class=\"success\"><td>Q"+String(i+1)+"</td><td>Correct</td></tr>";
+            }else if(answerSet[i] == '0'){
+                //table += "<tr class=\"danger\"><td>Q"+String(i+1)+"</td><td>Wrong</td></tr>";
+                answerList += String(i+1)+", "
+            }
+        }
+        // table += "</tbody></table>";
+
+        $("#result").text("Wrong List: "+answerList.substring(0,answerList.length-2));
     })
 </script>
 
